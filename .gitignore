@@ -4,6 +4,7 @@
 *\#
 .*.swp
 .coverage
+.venv
 aqt/forms
 locale
 tools/runanki.system
