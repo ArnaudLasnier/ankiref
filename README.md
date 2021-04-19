@@ -28,7 +28,7 @@ source .venv/bin/activate
 deactivate
 ```
 
-The `base` argument corresponds to the [base folder](https://docs.ankiweb.net/#/files?id=file-locations) used by Anki. The `profile` argument corresponds to the [profile](https://docs.ankiweb.net/#/profiles) used (i.e. the user) and defaults to "User 1". The `lang` argument corresponds to the language used in the user interface and defaults to "en_US".
+The `base` argument is required and corresponds to the [base folder](https://docs.ankiweb.net/#/files?id=file-locations) used by Anki. The two other arguments are optional: `profile` corresponds to the [profile](https://docs.ankiweb.net/#/profiles) used (i.e. the user) and defaults to "User 1" ; `lang` corresponds to the language used in the user interface and defaults to "en_US".
 
 ## Notes
 

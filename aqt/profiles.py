@@ -101,27 +101,6 @@ issue, please see the documentation for information on running Anki from \
 a flash drive.""" % self.base)
             raise
 
-    # Folder migration
-    ######################################################################
-
-    def _oldFolderLocation(self):
-        if isMac:
-            return os.path.expanduser("~/Documents/Anki")
-        elif isWin:
-            from aqt.winpaths import get_personal
-            return os.path.join(get_personal(), "Anki")
-        else:
-            p = os.path.expanduser("~/Anki")
-            if os.path.isdir(p):
-                return p
-            return os.path.expanduser("~/Documents/Anki")
-
-    def maybeMigrateFolder(self):
-        oldBase = self._oldFolderLocation()
-
-        if oldBase and not os.path.exists(self.base) and os.path.isdir(oldBase):
-            shutil.move(oldBase, self.base)
-
     # Profile load/save
     ######################################################################
 
@@ -275,27 +254,8 @@ and no other programs are accessing your profile folders, then try again."""))
         return path
 
     def _setBaseFolder(self, cmdlineBase):
-        if cmdlineBase:
-            self.base = os.path.abspath(cmdlineBase)
-        elif os.environ.get("ANKI_BASE"):
-            self.base = os.path.abspath(os.environ["ANKI_BASE"])
-        else:
-            self.base = self._defaultBase()
-            self.maybeMigrateFolder()
+        self.base = cmdlineBase
         self.ensureBaseExists()
-
-    def _defaultBase(self):
-        if isWin:
-            from aqt.winpaths import get_appdata
-            return os.path.join(get_appdata(), "Anki2")
-        elif isMac:
-            return os.path.expanduser("~/Library/Application Support/Anki2")
-        else:
-            dataDir = os.environ.get(
-                "XDG_DATA_HOME", os.path.expanduser("~/.local/share"))
-            if not os.path.exists(dataDir):
-                os.makedirs(dataDir)
-            return os.path.join(dataDir, "Anki2")
 
     def _loadMeta(self):
         opath = os.path.join(self.base, "prefs.db")

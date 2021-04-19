@@ -298,6 +298,23 @@ def _run(argv=None, exec=True):
     # parse args
     opts, args = parseArgs(argv)
 
+    if not opts.base:
+        sys.exit("ERROR: the --base CLI argument is mandatory")
+
+    if isMac:
+        default_base_folder_abs_path = os.path.expanduser("~/Library/Application Support/Anki2")
+    elif isLin:
+        data_dir = os.environ.get("XDG_DATA_HOME", os.path.expanduser("~/.local/share"))
+        if not os.path.exists(data_dir):
+            os.makedirs(data_dir)
+        default_base_folder_abs_path = os.path.join(data_dir, "Anki2")
+    else:
+        from aqt.winpaths import get_appdata
+        default_base_folder_abs_path = os.path.join(get_appdata(), "Anki2")
+
+    if os.path.abspath(opts.base) == default_base_folder_abs_path:
+        sys.exit("ERROR: cannot use this location for the base folder as it might conflict with a regular installation of Anki")
+
     # profile manager
     from aqt.profiles import ProfileManager
     pm = ProfileManager(opts.base)
