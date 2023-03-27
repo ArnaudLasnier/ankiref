@@ -4,7 +4,8 @@
 *\#
 .*.swp
 .coverage
-.venv
 locale
 tools/runanki.system
 anki/buildhash.py
+ankirun
+venv

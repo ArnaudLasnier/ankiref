@@ -72,7 +72,7 @@ class _Collection:
         self.decks = DeckManager(self)
         self.tags = TagManager(self)
         self.load()
-        if not self.crt:
+        if self.crt is None:
             d = datetime.datetime.today()
             d -= datetime.timedelta(hours=4)
             d = datetime.datetime(d.year, d.month, d.day)
@@ -765,8 +765,8 @@ select id from notes where mid = ?) limit 1""" %
         curs = self.db.cursor()
         self.save()
         oldSize = os.stat(self.path)[stat.ST_SIZE]
-        if self.db.scalar("pragma integrity_check") != "ok":
-            return (_("Collection is corrupt. Please see the manual."), False)
+        # if self.db.scalar("pragma integrity_check") != "ok":
+        #     return (_("Collection is corrupt. Please see the manual."), False)
         # note types with a missing model
         ids = self.db.list("""
 select id from notes where mid not in """ + ids2str(self.models.ids()))

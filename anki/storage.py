@@ -218,7 +218,7 @@ def _addSchema(db, setColConf=True):
     db.executescript("""
 create table if not exists col (
     id              integer primary key,
-    crt             integer not null,
+    crt             integer,
     mod             integer not null,
     scm             integer not null,
     ver             integer not null,
@@ -286,7 +286,7 @@ create table if not exists graves (
 );
 
 insert or ignore into col
-values(1,0,0,%(s)s,%(v)s,0,0,0,'','{}','','','{}');
+values(1,null,0,%(s)s,%(v)s,0,0,0,'','{}','','','{}');
 """ % ({'v':SCHEMA_VERSION, 's':intTime(1000)}))
     if setColConf:
         _addColVars(db, *_getColVars(db))

@@ -26,7 +26,10 @@ regexps = {
 
 # add standard tex install location to osx
 if isMac:
-    os.environ['PATH'] += ":/usr/texbin:/Library/TeX/texbin"
+    if os.environ.get("PATH"):
+        os.environ["PATH"] = os.environ['PATH'] + ":/usr/texbin:/Library/TeX/texbin"
+    else:
+        os.environ["PATH"] = "/usr/texbin:/Library/TeX/texbin"
 
 def stripLatex(text):
     for match in regexps['standard'].finditer(text):

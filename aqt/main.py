@@ -9,6 +9,7 @@ import gc
 import time
 import faulthandler
 import platform
+import sys
 from threading import Thread
 
 from send2trash import send2trash
@@ -79,7 +80,7 @@ class AnkiQt(QMainWindow):
         self.setupProgress()
         self.setupErrorHandler()
         self.setupSignals()
-        self.setupAutoUpdate()
+        # self.setupAutoUpdate()
         self.setupHooks()
         self.setupRefreshTimer()
         self.updateTitleBar()
@@ -265,6 +266,8 @@ close the profile or restart Anki."""))
         # titlebar
         self.setWindowTitle(self.pm.name + " - Anki")
         # show and raise window for osx
+        screenGeometry = self.window().windowHandle().screen().availableGeometry()
+        self.resize(screenGeometry.width(), screenGeometry.height())
         self.show()
         self.activateWindow()
         self.raise_()
@@ -638,11 +641,9 @@ title="%s" %s>%s</button>''' % (
         signal.signal(signal.SIGINT, self.onSigInt)
 
     def onSigInt(self, signum, frame):
-        # interrupt any current transaction and schedule a rollback & quit
-        if self.col:
-            self.col.db.interrupt()
         def quit():
-            self.col.db.rollback()
+            self.col.db.commit()
+            print("db committed")
             self.close()
         self.progress.timer(100, quit, False)
 
