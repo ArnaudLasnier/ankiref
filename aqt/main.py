@@ -266,8 +266,9 @@ close the profile or restart Anki."""))
         # titlebar
         self.setWindowTitle(self.pm.name + " - Anki")
         # show and raise window for osx
-        screenGeometry = self.window().windowHandle().screen().availableGeometry()
-        self.resize(screenGeometry.width(), screenGeometry.height())
+        if sys.platform == "darwin":
+            screenGeometry = self.window().windowHandle().screen().availableGeometry()
+            self.resize(screenGeometry.width(), screenGeometry.height())
         self.show()
         self.activateWindow()
         self.raise_()
