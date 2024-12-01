@@ -1,42 +1,56 @@
 # Anki Reference Version
 
-[Anki](https://apps.ankiweb.net/) is a free and open-source flashcard program that uses [spaced repetition](https://en.wikipedia.org/wiki/Spaced_repetition). This repository contains a reference version of Anki based on [**Anki v2.1.16**](https://github.com/ankitects/anki/tree/2.1.16). The purpose of this reference version is to be able to install and run the same version of Anki in different environments with a stable set of settings and features. It was primarily created for [`ArnaudLasnier/computer_science_flashcards`](https://github.com/ArnaudLasnier/computer_science_flashcards).
+[Anki](https://apps.ankiweb.net/) is a free and open-source flashcard program that uses [spaced repetition](https://en.wikipedia.org/wiki/Spaced_repetition). This repository contains a reference version of Anki based on [**Anki v2.1.16**](https://github.com/ankitects/anki/tree/2.1.16) (released on December 12, 2019).
 
-## Installation
+[Anki v2.1.16](https://github.com/ankitects/anki/tree/2.1.16) was the first release to [remove](https://changes.ankiweb.net/changes/2.1.10-19.html#changes-in-2116) the "experimental" label from the new [v2 scheduler](https://faqs.ankiweb.net/the-anki-2.1-scheduler.html#v2-scheduler) introduced in Anki v2.1.0 and also the last to be solely written in Python (some parts of Anki were indeed rewritten in Rust in [Anki v2.1.17](https://github.com/ankitects/anki/tree/2.1.17), released on January 11, 2020).
 
-For macOS, with [Homebrew](https://brew.sh):
+
+## System Dependencies
+
+On macOS:
 
 ```sh
-brew install python mpv mplayer lame portaudio sqlite git
-git clone https://github.com/ArnaudLasnier/ankiref
-cd ankiref
-python3 -m venv .venv
-source .venv/bin/activate
-pip3 install -r requirements.txt
-deactivate
+brew install mpv mplayer lame portaudio sqlite git
 ```
 
-Note that this version of Anki requires **Python 3.6** or newer. If you cannot download a compatible version of Python with Homebrew, you can build Python 3.6 directly [from source](https://www.python.org/downloads/release/python-3613/).
+On Ubuntu:
+
+```sh
+sudo apt install mpv mplayer lame portaudio19-dev sqlite3 libxcb-xinerama0 qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools qtwebengine5-dev
+```
+
+## Python Setup
+
+This version of Anki requires a version of Python in the **v3.6.x – v3.9.x** range. The simplest way to acquire such a version of Python is to use [`uv`](https://docs.astral.sh/uv):
+
+```sh
+uv python install
+```
+
+Then you can setup a virtual environment with:
+
+```sh
+uv venv
+uv pip install -r requirements.txt
+```
 
 ## Running Anki
 
 Once everything is properly installed, you can run Anki with:
 
 ```sh
-source .venv/bin/activate
-./runanki --base <base> --profile <profile> --lang <lang>
-deactivate
+uv run python runanki --base <base>
 ```
 
-The `base` argument is required and corresponds to the [base folder](https://docs.ankiweb.net/#/files?id=file-locations) used by Anki. The two other arguments are optional: `profile` corresponds to the [profile](https://docs.ankiweb.net/#/profiles) used (i.e. the user) and defaults to "User 1" ; `lang` corresponds to the language used in the user interface and defaults to "en_US".
+The `--base` argument is required and corresponds to the [base folder](https://docs.ankiweb.net/files.html#file-locations) used by Anki. There are also two other optional arguments:
 
-## Notes
+- `--profile` corresponds to the [profile](https://docs.ankiweb.net/profiles.html) used (i.e. the user) and defaults to "User 1"
+- `--lang` corresponds to the language used in the user interface and defaults to "en_US".
 
-This reference version is based on [Anki v2.1.16](https://github.com/ankitects/anki/tree/2.1.16) (released on December 12, 2019) because it was the first release to [remove](https://changes.ankiweb.net/#/?id=changes-in-2116) the "experimental" label from the new scheduler<sup>1</sup> and also the last to be solely written in Python<sup>2</sup>. Also, the differences between this reference version and the original Anki v2.1.16 are well explained in the [commit log](https://github.com/ArnaudLasnier/ankiref/commits/reference) of this branch.
+On Debian, Ubuntu and other Debian-based distributions, you will need to run Anki by disabling the Qt WebEngine sandboxing:
 
----
+```sh
+QTWEBENGINE_DISABLE_SANDBOX=1 uv run python runanki --base <base>
+```
 
-<small>
-    <p><sup>1</sup> Anki 2.1 introduced a <a href="https://changes.ankiweb.net/#/?id=experimental-scheduler">new optional scheduler</a>. It was considered experimental until Anki v2.1.16.</p>
-    <p><sup>2</sup> Some parts of Anki were indeed rewritten in Rust in <a href="https://github.com/ankitects/anki/tree/2.1.17">Anki v2.1.17</a> (released on January 11, 2020).</p>
-</small>
+The reason is explained [here](https://doc.qt.io/qt-5/qtwebengine-platform-notes.html#sandboxing-support).
